@@ -372,6 +372,8 @@ print 'after turnning 90 degree clockwise:', m3
 import itertools
 l = list(itertools.chain.from_iterable([[1,2],[5,6],[7,8]])) #l = [1, 2, 5, 6, 7, 8]
 
+#*** study all other tools in itertools
+
 
 l = [1,2,3,4,5,6,7,8]
 l2 = l[::2]
@@ -380,4 +382,12 @@ for index, n in enumerate(l[::2]):
   print index, n
 print 'l:', l
 
+
+#if items of a sequence is list or tuple, it can be sorted first on the first item then the second...
+l1 = [[2,3,6], [1,3], [6,8,9],[9,1,2]]
+l1.sort()
+l1 # [[1, 3], [2, 3, 6], [6, 8, 9], [9, 1, 2]]
+t1 = [(2,3,6), (1,3), (6,8,9),(9,1,2)]
+t1.sort() 
+t1 #[(1, 3), (2, 3, 6), (6, 8, 9), (9, 1, 2)]
 

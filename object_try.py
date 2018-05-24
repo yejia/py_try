@@ -358,3 +358,55 @@ class A:
 a = A()
 #accessible
 a._method()
+
+
+# l1 = [1]
+# In [8]: isinstance(l1, list)
+# Out[8]: True
+
+# In [9]: isinstance(l1, object)
+# Out[9]: True
+
+# In [10]: isinstance(type, object)
+# Out[10]: True
+
+# In [11]: isinstance(l1, type)
+# Out[11]: False
+
+# In [12]: isinstance(list, type)
+# Out[12]: True
+
+
+
+
+from functools import wraps
+
+class attr_block_meta(type):
+    def __new__(meta, cname, bases, dctry):
+        def _setattr(self, name, value):
+            if not hasattr(self, name):
+                raise AttributeError("'" + name + "' not an attibute of " + cname + " object.")
+            object.__setattr__(self, name, value)
+
+        def override_setattr_after(fn):
+            @wraps(fn)
+            def _wrapper(*args, **kwargs):
+                cls.__setattr__ = object.__setattr__
+                fn(*args, **kwargs)
+                cls.__setattr__ = _setattr
+            return _wrapper
+
+        cls = type.__new__(meta, cname, bases, dctry)
+        cls.__init__ = override_setattr_after(cls.__init__)
+        return cls
+
+
+class ImPoint(object):
+    __metaclass__ = attr_block_meta
+    def __init__(self, q, z):
+        self.q = q
+        self.z = z
+
+point = ImPoint(1, 2)
+print point.q, point.z
+point.w = 3  # Raises AttributeError
