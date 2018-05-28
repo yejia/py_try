@@ -391,3 +391,148 @@ t1 = [(2,3,6), (1,3), (6,8,9),(9,1,2)]
 t1.sort() 
 t1 #[(1, 3), (2, 3, 6), (6, 8, 9), (9, 1, 2)]
 
+
+
+def izip(*iterables):
+    # izip('ABCD', 'xy') --> Ax By
+    its = map(iter, iterables)
+    print its    
+    while its:
+    #*** or just use the below is the sameif its is not empty. *** while is just for catching the StopIteration. 
+    #*** So instead of catch StopIteration by yourself and break, just use the while or for to catch it for you automatically. 
+    #*** however, py3 seems to have deprecated this behavior. 
+    # while True:
+        yield tuple(map(next, its))
+
+print list(izip('ABCD', 'xy'))
+
+
+for item in  izip('ABCD', 'xy'):
+    print item
+
+
+
+# l = [1, 2, 3]
+# it = iter(l)
+# while it:
+#     print it.next()
+
+
+ll = [[1, 2, 3], [4,5]]
+# it = [iter(l) for l in ll]
+# while it:
+#     print it[0].next()    
+
+def f(iterables):
+    its = [iter(l) for l in iterables]
+    while its:
+    #or just use the below is the same if its is not empty    
+    # while True:
+        yield its[0].next()  
+        #* if not using yield, the StopIteration is raised immediately. 
+        #print its[0].next()       
+
+#generator is iterator itself. So you can put it in list(). So list() will catch the StopIteration error?
+print list(f(ll))
+#below will trigger the StopIteration error
+# f = f(ll)
+# print next(f)
+# print next(f)
+# print next(f)
+# print next(f)
+
+
+print 'iterator can be iterated only once...'
+l = [1, 2, 3]
+it = iter(l)
+for i in it:
+    print i
+
+print 'Now nothing will show:'
+for i in it:
+    print i
+
+print 'but you can get a new iterator over the iterable:'
+it2 = iter(l)
+for i in it2:
+    print i
+
+#** iterator's __iter__ method return self,  which means that the for-in statement will call the iterator's own next method 
+print 'for statment, when used on iterable, it automatically call the iter method (.__iter__) on the iterable to get an iterator'    
+for i in l:
+    print i
+    
+
+
+
+print list(itertools.izip_longest('ABCD', 'xy', fillvalue='-'))        
+
+def permutations_(iterable, r=None):
+    # permutations('ABCD', 2) --> AB AC AD BA BC BD CA CB CD DA DB DC
+    # permutations(range(3)) --> 012 021 102 120 201 210
+    size = r if r else len(iterable)     
+    iterable = list(iterable)       
+    for item in iterable:
+        itc = iterable[:]
+        itc.remove(item)        
+        for item2 in itc: 
+            itc2 = itc[:]           
+            itc2.remove(item2)
+            for item3 in itc2:
+                yield (item, item2, item3)
+
+# def permutations(iterable, r=None):
+#     size = r if r else len(iterable)
+#     item, for  for item in iterable
+
+
+
+# print list(permutations('ABCD', 2))            
+# print list(itertools.permutations('ABCD', 3))            
+# print list(permutations('ABCD', 3))            
+
+
+
+def product(*args, **kwds):
+    # product('ABCD', 'xy') --> Ax Ay Bx By Cx Cy Dx Dy
+    # product(range(2), repeat=3) --> 000 001 010 011 100 101 110 111
+    pass
+
+
+def repeat(object, times=None):
+    # repeat(10, 3) --> 10 10 10    
+    for i in range(times):
+        yield object
+
+print list(repeat(10, 3))        
+
+
+def starmap(function, iterable):
+    # starmap(pow, [(2,5), (3,2), (10,3)]) --> 32 9 1000
+    for it in iterable:
+        yield function(*it) 
+
+print list(starmap(pow, [(2,5), (3,2), (10,3)]))     
+
+
+def takewhile(predicate, iterable):
+    # takewhile(lambda x: x<5, [1,4,6,4,1]) --> 1 4
+    for it in iterable:
+        if predicate(it):
+            yield it
+        else:
+            break 
+            # or use  StopIteration  
+            #raise StopIteration
+
+print list(takewhile(lambda x: x<5, [1,4,6,4,1]))            
+
+
+
+def tee(iterable, n=2):
+    pass
+
+
+
+
+
