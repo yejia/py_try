@@ -74,9 +74,11 @@ d['a'].append(5)
 print d #  defaultdict(list, {'a': [5]})
 #** use of Counter, accept seq, and count each item, return a dict
 count = collections.Counter([1,2,2,3])
-print 'count:', count
+print 'count:', count #count: Counter({2: 2, 1: 1, 3: 1})
+
 
 #* defaultdict takes a function
+#** lambda without an arg
 cds = collections.defaultdict(lambda:3)
 print cds.get(1) #None
 print cds[1] #3
