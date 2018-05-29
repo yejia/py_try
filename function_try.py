@@ -110,7 +110,7 @@ print 'result of seeding:', seeding([{'a':1},{'b':2}])
 
 
 
-#lambda without input
+#* lambda without input
 f = lambda:3
 a = f()
 print 'a:', a #3

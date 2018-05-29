@@ -113,7 +113,7 @@ for i in range(n-1,-1,-1):
     print i
 
 
-#** one is smaller than any object!
+#** None is smaller than any object!
 
 class A:
     pass
@@ -199,6 +199,8 @@ print 'l2:', l2
 # In [8]: reduce(operator.and_, [0,2,3,0])
 # Out[8]: 0
 
+
+dir(operator)
 
 
 def get_int():

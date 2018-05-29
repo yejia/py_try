@@ -1,12 +1,12 @@
 
-#** list is mutable, thus list cannot be used as dict key. You have to use tuple. 
+#*** list is mutable, thus list cannot be used as dict key. You have to use tuple. 
 
 
 
 ###################### Python's notion of object ######################################
 
 
-#python's function calling is passing by reference (called passing by object in python), return also return the reference
+#* python's function calling is passing by reference (called passing by object in python), return also return the reference
 def m(l):
     l.append(5)
     return l
@@ -186,6 +186,7 @@ del l[2]
 #* for list to work on the left end, you can use insert to add
 #l.insert(0, val)
 
+#to have constant time working on the left side, use deque
 
 
 ######################   list used as stack or queue ########################################
@@ -217,6 +218,10 @@ y = s.popleft()
 print 'y:', y
 print 's:', s
 s.append(9)
+print 'after appendleft:'
+s.appendleft(100)
+print s
+
 l = list(s)
 print 'l:', l
 l2 = [s]
@@ -335,6 +340,7 @@ m = [[1,0,0,0],
 l = [m[i][j] for i in range(len(m)) for j in range(len(m[i]))]
 print 'looping through matrix:', l
 
+# list[::-1] reverse the list
 
 m1 = [[3,5,7,9],
      [2,1,0,4],
@@ -369,18 +375,21 @@ print 'after turnning 90 degree clockwise:', m3
 # int mid_value = matrix[mid/col_num][mid%col_num];
 
 
-import itertools
-l = list(itertools.chain.from_iterable([[1,2],[5,6],[7,8]])) #l = [1, 2, 5, 6, 7, 8]
-
-#*** study all other tools in itertools
-
-
 l = [1,2,3,4,5,6,7,8]
 l2 = l[::2]
 print 'l2:', l2
 for index, n in enumerate(l[::2]):
   print index, n
 print 'l:', l
+
+
+
+import itertools
+l = list(itertools.chain.from_iterable([[1,2],[5,6],[7,8]])) #l = [1, 2, 5, 6, 7, 8]
+
+#*** study all other tools in itertools
+
+
 
 
 #if items of a sequence is list or tuple, it can be sorted first on the first item then the second...
@@ -533,6 +542,181 @@ def tee(iterable, n=2):
     pass
 
 
+#recipes.....
+
+from itertools import *
+import operator
+
+def take(n, iterable):
+    "Return first n items of the iterable as a list"
+    return list(islice(iterable, n))
+
+def nth(iterable, n, default=None):
+    "Returns the nth item or a default value"
+    return next(islice(iterable, n, None), default)
+
+
+l = [1,2,3,4,5,6]
+
+print nth(l, 2) #3
+print nth(l, 1) #2
+print nth(l, 6) #None
+print nth(l, 5) #6
+print nth(l, 6, 0) #0
 
 
 
+
+def all_equal(iterable):
+    "Returns True if all the elements are equal to each other"
+    g = groupby(iterable)
+    return next(g, True) and not next(g, False)
+
+print all_equal(l) #False
+print all_equal('aaaaaaaaaaaaa') #True
+print all_equal('aaaaaaaaaaaaab') #False
+
+
+def quantify(iterable, pred=bool):
+    "Count how many times the predicate is true"
+    return sum(imap(pred, iterable))
+
+
+print quantify(l, bool) #6
+print quantify(l) #6
+print quantify(l, lambda x:x>3) #3
+
+
+def padnone(iterable):
+    """Returns the sequence elements and then returns None indefinitely.
+
+    Useful for emulating the behavior of the built-in map() function.
+    """
+    return chain(iterable, repeat(None))
+
+p = padnone(l)
+for i in range(10):
+    print next(p)
+#1 2 3 4 5 6 None None None None
+
+
+print take(12, padnone(l)) #[1, 2, 3, 4, 5, 6, None, None, None, None, None, None]
+
+
+
+def ncycles(iterable, n):
+    "Returns the sequence elements n times"
+    return chain.from_iterable(repeat(tuple(iterable), n))
+
+print list(ncycles(l, 3)) #[1, 2, 3, 4, 5, 6, 1, 2, 3, 4, 5, 6, 1, 2, 3, 4, 5, 6]
+
+
+
+def dotproduct(vec1, vec2):
+    return sum(imap(operator.mul, vec1, vec2))
+
+print dotproduct([1,2,3],[4,5,6]) #32
+
+
+
+
+def flatten(listOfLists):
+    "Flatten one level of nesting"
+    return chain.from_iterable(listOfLists)
+
+
+print list(flatten([[1,2,3],[4,5,6]])) #[1, 2, 3, 4, 5, 6]
+
+
+def repeatfunc(func, times=None, *args):
+    """Repeat calls to func with specified arguments.
+
+    Example:  repeatfunc(random.random)
+    """
+    if times is None:
+        return starmap(func, repeat(args))
+    return starmap(func, repeat(args, times))
+
+
+print take(10, repeatfunc(random.random)) 
+#something like:
+# [0.23517044717398117,
+#  0.3387863423216677,
+#  0.21937407393806985,
+#  0.8078563928893178,
+#  0.39312315615449656,
+#  0.708741381966231,
+#  0.5094298759762235,
+#  0.650845576219772,
+#  0.8050691723089549,
+#  0.8483819746539789]
+
+print '2 random number btw 0 and 9'
+print take(2, repeatfunc(random.randint, None, 0, 9)) #example output: [2, 5]  #times=None means keep repeating, but we only 'take' 2
+
+print '10 random number btw 0 and 9'
+print take(10, repeatfunc(random.randint, None, 0, 9)) #example output: [7, 4, 1, 5, 8, 0, 0, 0, 3, 5]
+
+print 'can only return 2 random number btw 0 and 9 because times=2'
+print take(10, repeatfunc(random.randint, 2, 0, 9))
+
+print 'take 10 random numbers from times=12'
+print take(10, repeatfunc(random.randint, 12, 0, 9))
+
+
+
+def pairwise(iterable):
+    "s -> (s0,s1), (s1,s2), (s2, s3), ..."
+    a, b = tee(iterable)
+    next(b, None)
+    return izip(a, b)
+
+print list(pairwise('hello'))    #[('h', 'e'), ('e', 'l'), ('l', 'l'), ('l', 'o')]
+
+ 
+def grouper(iterable, n, fillvalue=None):
+    "Collect data into fixed-length chunks or blocks"
+    # grouper('ABCDEFG', 3, 'x') --> ABC DEF Gxx
+    args = [iter(iterable)] * n
+    #*** this is way too smart. args are a list of the same iterator. So they are all iterating on the same thing
+    # everytime getting the next one. Thus izip achieve the effect this function needs.
+    return izip_longest(fillvalue=fillvalue, *args)
+
+
+print list(grouper('hello', 2, 'x')) # [('h', 'e'), ('l', 'l'), ('o', 'x')]
+
+[iter('hello')]*2 #[<iterator at 0x7fb9a0449590>, <iterator at 0x7fb9a0449590>] So you see it is the same iterator
+
+
+
+def roundrobin(*iterables):
+    "roundrobin('ABC', 'D', 'EF') --> A D E B F C"
+    # Recipe credited to George Sakkis
+    pending = len(iterables)
+    nexts = cycle(iter(it).next for it in iterables)
+    while pending:
+        try:
+            for next in nexts:
+                yield next()
+        except StopIteration:
+            pending -= 1
+            nexts = cycle(islice(nexts, pending))
+
+
+print list(roundrobin('ABC', 'D', 'EF')) # ['A', 'D', 'E', 'B', 'F', 'C']
+
+
+
+#product vs permutation vs combination
+#from https://docs.python.org/2/library/itertools.html
+# product('ABCD', repeat=2)       AA AB AC AD BA BB BC BD CA CB CC CD DA DB DC DD
+# permutations('ABCD', 2)     AB AC AD BA BC BD CA CB CD DA DB DC
+# combinations('ABCD', 2)     AB AC AD BC BD CD
+# combinations_with_replacement('ABCD', 2)        AA AB AC AD BB BC BD CC CD DD
+
+l1 = product('ABCD', repeat=2)
+l2 = list(permutations('ABCD', 2))
+s1 = set(l1)
+s2 = set(l2)
+print 'the difference btw product and permutation:'
+print s1-s2 #{('A', 'A'), ('B', 'B'), ('C', 'C'), ('D', 'D')} 
