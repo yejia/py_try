@@ -399,3 +399,6 @@ t1 #[(1, 3), (2, 3, 6), (6, 8, 9), (9, 1, 2)]
 
 import itertools
 l = list(itertools.chain.from_iterable([[1,2],[5,6],[7,8]])) #l = [1, 2, 5, 6, 7, 8]
+print 'l:', l
+l2 = list(itertools.chain([1,2],[5,6],[7,8]))
+print 'l2:', l
