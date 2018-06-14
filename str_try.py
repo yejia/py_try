@@ -104,3 +104,31 @@ print(s)
 s = 'hello %s! follow %s!' % ('China', 'you')
 print s
 
+
+
+# https://stackoverflow.com/questions/101268/hidden-features-of-python?page=2&tab=votes#tab-top
+
+# Multi line strings
+
+# One approach is to use backslashes:
+
+# >>> sql = "select * from some_table \
+# where id > 10"
+# >>> print sql
+# select * from some_table where id > 10
+# Another is to use the triple-quote:
+
+# >>> sql = """select * from some_table 
+# where id > 10"""
+# >>> print sql
+# select * from some_table where id > 10
+# Problem with those is that they are not indented (look poor in your code). If you try to indent, it'll just print the white-spaces you put.
+
+# A third solution, which I found about recently, is to divide your string into lines and surround with parentheses:
+
+# >>> sql = ("select * from some_table " # <-- no comma, whitespace at end
+#            "where id > 10 "
+#            "order by name") 
+# >>> print sql
+# select * from some_table where id > 10 order by name
+# note how there's no comma between lines (this is not a tuple), and you have to account for any trailing/leading white spaces that your string needs to have. All of these work with placeholders, by the way (such as "my name is %s" % name).

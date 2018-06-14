@@ -78,3 +78,4 @@ try:
 except TypeError as te:
     print te.message  
 
+#set use {}, like dict, because dict keys are also hashed

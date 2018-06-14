@@ -409,4 +409,9 @@ class ImPoint(object):
 
 point = ImPoint(1, 2)
 print point.q, point.z
-point.w = 3  # Raises AttributeError
+# point.w = 3  # Raises AttributeError
+
+
+
+
+

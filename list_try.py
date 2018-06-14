@@ -402,3 +402,11 @@ l = list(itertools.chain.from_iterable([[1,2],[5,6],[7,8]])) #l = [1, 2, 5, 6, 7
 print 'l:', l
 l2 = list(itertools.chain([1,2],[5,6],[7,8]))
 print 'l2:', l
+
+
+
+#zip can accept list and iterator as input
+l1 = [1,2,3]
+it = iter(l1)
+l2 = [4,5,6]
+print zip(it, l2)

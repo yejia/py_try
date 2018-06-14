@@ -60,7 +60,9 @@ d = {'a':1, 'b':2, 'c':3}
 #I guess it is like [i for i in xrange(10)], it gets the input from the iterator and then put inside the list constructor
 #So the same, below build the input to be put inside the dict constructor, even though 'a':1 itself is not valid syntax!!!
 #I guess it is just a python statement that is able to do so! In py2, iteractor kind of like string to be put together and eval.
-#python3 changed the syntax for this? (tried in ipython of python3, still works) TODO:
+# https://docs.quantifiedcode.com/python-anti-patterns/readability/not_using_a_dict_comprehension.html
+# https://docs.python.org/3.0/whatsnew/3.0.html#overview-of-syntax-changes
+#from link above, this syntax is added in py2.7, and kept in py3
 d = {key:d[key] for key in d.keys() if key!='b'}
 print 'd:',d
 
