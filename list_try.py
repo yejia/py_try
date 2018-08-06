@@ -410,3 +410,15 @@ l1 = [1,2,3]
 it = iter(l1)
 l2 = [4,5,6]
 print zip(it, l2)
+
+
+
+x = ['foo', [1,2,3], 10.4]
+y = list(x) # or x[:] #* copy on reference
+y[0] = 'fooooooo'
+y[1][0] = 4
+print x
+print y
+#['foo', [4, 2, 3], 10.4]
+#['fooooooo', [4, 2, 3], 10.4]
+
